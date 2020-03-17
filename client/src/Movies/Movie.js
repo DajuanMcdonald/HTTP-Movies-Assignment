@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useEffect, useState} from  'react';
 import axios from 'axios';
 import { useRouteMatch } from 'react-router-dom';
 import MovieCard from './MovieCard';
 import Loader from 'react-loader-spinner';
 
+
 function Movie({ addToSavedList, updateMovieList }) {
-  const [movie, setMovie] = React.useState(null);
-  const [update, setUpdate] = React.useState(null)
+  const [movie, setMovie] = useState(null);
+  const [update, setUpdate] = useState(null)
   const match = useRouteMatch();
 
   const fetchMovie = id => {
@@ -24,7 +25,7 @@ function Movie({ addToSavedList, updateMovieList }) {
       updateMovieList(update);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchMovie(match.params.id);
   }, [match.params.id]);
 
