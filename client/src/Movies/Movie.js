@@ -2,7 +2,7 @@ import React, {useEffect, useState} from  'react';
 import axios from 'axios';
 import { useRouteMatch } from 'react-router-dom';
 import MovieCard from './MovieCard';
-import Loader from 'react-loader-spinner';
+import UpdateMovie from './UpdateMovie'
 
 
 function Movie({ addToSavedList, updateMovieList }) {
@@ -22,7 +22,7 @@ function Movie({ addToSavedList, updateMovieList }) {
   };
 
   const updateMovie = () => {
-      updateMovieList(update);
+      console.log('updateing...', movie)
   }
 
   useEffect(() => {
