@@ -30,13 +30,8 @@ function Movie({ addToSavedList, updateMovieList }) {
   }, [match.params.id]);
 
   if (!movie) {
-    return <Loader
-        type="Hearts"
-        color="#00BFFF"
-        height={100}
-        width={100}
-        timeout={3000}
-    />
+    return <h2>Loading...</h2>
+    
   }
 
   return (

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Button, Card } from 'semantic-ui-react'
 
 export class UpdateMovie extends Component {
     state = {
@@ -13,7 +14,7 @@ export class UpdateMovie extends Component {
     }
 
     handleStars = () => {
-        const {stars} = this.state
+        const { stars } = this.state
         stars.push(this.state.actor)
         this.setState({
             actor: '', stars
@@ -28,14 +29,14 @@ export class UpdateMovie extends Component {
 
     handleMovieSubmit = () => {
         const { stars, title, metascore, director } = this.state;
-        const newMovie = { stars, title, metascore, director}
+        const newMovie = { stars, title, metascore, director }
         const saveMovie = axios.post('http://localhost:3333/api/movies', newMovie)
-        .then(res => {
-            this.props.history.replace('/');
-        })
-        .catch(err => {
-            console.log(err.response.status)
-        })
+            .then(res => {
+                this.props.history.replace('/');
+            })
+            .catch(err => {
+                console.log(err.response.status)
+            })
     }
     render() {
         return (
@@ -65,7 +66,15 @@ export class UpdateMovie extends Component {
                         type="text"
                     />
 
-                    
+                    <Button onClick={this.handleStars}>Add Actor</Button>
+                    <Button onClick={this.handleMovieSubmit}>Save Movie</Button>
+                    {this.state.stars.map(actor => {
+                        return <Card>
+                            <Card.Content>
+                                <Card.Header>{actor}</Card.Header>
+                            </Card.Content>
+                        </Card>
+                    })}
                 </form>
             </div>
         )
