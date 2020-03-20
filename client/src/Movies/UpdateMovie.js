@@ -1,84 +1,60 @@
-import React, { Component } from 'react'
+import React from 'react'
 import axios from 'axios'
-import { Button, Card } from 'semantic-ui-react'
-
-export class UpdateMovie extends Component {
-    state = {
-        metascore: 0,
-        title: '',
-        actor: '',
-        director: '',
-        stars: []
 
 
-    }
+function UpdateMovie(props) {
+    const {id} = props.match.params
+    const initialValues = {id:"", title:"", director:"", metascore:"", stars:[]}
+    const [movie, setMovie] = React.useState(initialValues)
 
-    handleStars = () => {
-        const { stars } = this.state
-        stars.push(this.state.actor)
-        this.setState({
-            actor: '', stars
-        });
-    }
+    React.useEffect(() => {
+        axios
+        .get(`http://localhost:5000/api/movies/${id}`)
+        .then( res => {
+            setMovie(res.data)
+        })
 
-    handleInput = event => {
-        this.setState({
-            [event.target.name]: event.target.value
+    },[id])
+
+    const handleChange = e => {
+        setMovie({
+            ...movie,
+            [e.target.name]: e.target.value
         })
     }
 
-    handleMovieSubmit = () => {
-        const { stars, title, metascore, director } = this.state;
-        const newMovie = { stars, title, metascore, director }
-        const saveMovie = axios.post('http://localhost:3333/api/movies', newMovie)
-            .then(res => {
-                this.props.history.replace('/');
-            })
-            .catch(err => {
-                console.log(err.response.status)
-            })
+    const updateStars = e => {
+        setMovie({
+            ...movie,
+            stars: [e.target.value]
+        })
     }
-    render() {
-        return (
-            <div>
-                <form>
-                    <input onChange={this.handleInput}
-                        name="title"
-                        type="text"
-                        value={this.state.title}
-                    />
 
-                    <input onChange={this.handleInput}
-                        name="director"
-                        value={this.state.director}
-                        type="text"
-                    />
-
-                    <input onChange={this.handleInput}
-                        name="actor"
-                        type="text"
-                        value={this.state.actor}
-                    />
-
-                    <input onChange={this.handleInput}
-                        name="metascore"
-                        value={this.state.metascore}
-                        type="text"
-                    />
-
-                    <Button onClick={this.handleStars}>Add Actor</Button>
-                    <Button onClick={this.handleMovieSubmit}>Save Movie</Button>
-                    {this.state.stars.map(actor => {
-                        return <Card>
-                            <Card.Content>
-                                <Card.Header>{actor}</Card.Header>
-                            </Card.Content>
-                        </Card>
-                    })}
-                </form>
-            </div>
-        )
+    const handleSubmit = e => {
+        e.preventDefault();
+        axios
+        .put(`http://localhost:5000/api/movies/${id}`, movie)
+        .then(res => {
+            setMovie(initialValues)
+            props.history.push('/')
+        })
+        .catch(err => console.log(err))
     }
+    return (
+        <div>
+            <form onSubmit={handleSubmit}>
+                <label>Title:</label>
+                <input type="text" name="title" value={movie.title} onChange={handleChange}/>
+
+                <label>Director:</label>
+                <input type="text" name="director" value={movie.director} onChange={handleChange}/>
+
+                <button>Update</button>
+
+            </form>
+            
+        </div>
+    )
 }
 
 export default UpdateMovie
